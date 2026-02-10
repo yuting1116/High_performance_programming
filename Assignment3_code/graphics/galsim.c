@@ -54,7 +54,7 @@ Particle* read_configuration(char* fileName, int N)
     return particles;
 }
 
-void update_particles(int N, Particle*  particles, Particle*  particles_next, double delta_t)
+void update_particles(int N, Particle* __restrict particles, Particle* __restrict particles_next, double delta_t)
 {
     double G = 100.0f/N;
     double epsilon = 1e-3;
