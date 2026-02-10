@@ -12,7 +12,10 @@ make clean
 make
 time ./galsim 3000 ../input_data/ellipse_N_03000.gal 100 0.00001 0
 ```
-
+### Automated test (compare with all the reference data)
+```bash
+./test.sh
+```
 ### Program Input
 
 The program `galsim` accepts **five input arguments**:
