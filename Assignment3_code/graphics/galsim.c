@@ -112,15 +112,7 @@ void update_particles(int N, Particle* __restrict particles, Particle* __restric
 
 void write_history(FILE* fp, int N, Particle* particles)
 {
-    for (int i = 0; i < N; i++)
-    {
-        fwrite(&particles[i].pos_x, sizeof(double), 1, fp);
-        fwrite(&particles[i].pos_y, sizeof(double), 1, fp);
-        fwrite(&particles[i].mass, sizeof(double), 1, fp);
-        fwrite(&particles[i].vel_x, sizeof(double), 1, fp);
-        fwrite(&particles[i].vel_y, sizeof(double), 1, fp);
-        fwrite(&particles[i].brightness, sizeof(double), 1, fp);
-    }
+    fwrite(particles, sizeof(Particle), N, fp);
     fclose(fp);
 }
 
