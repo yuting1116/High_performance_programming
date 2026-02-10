@@ -6,9 +6,7 @@ ref_folder="./ref_output_data"
 out_folder="./graphics"
 
 # N 值列表
-Ns=(10 100 500)
-#  1000 2000 3000)
-# , 100, 500, 1000, 2000, 3000)
+Ns=(10 100 500 1000 2000 3000)
 
 for N in "${Ns[@]}"; do
 
