@@ -59,8 +59,6 @@ void update_particles(int N, Particle* particles, Particle* particles_next, doub
 {
     double G = 100.0f/N;
     double epsilon = 1e-3;
-    double* f_x_ij = (double*)calloc(N, sizeof(double));
-    double* f_y_ij = (double*)calloc(N, sizeof(double));
     for (int i = 0; i < N; i++)
     {   
         double f_x_ij = 0;
@@ -104,10 +102,6 @@ void update_particles(int N, Particle* particles, Particle* particles_next, doub
         // printf("Particel%d: mass(%.2f) pos(%.2f, %.2f) vel(%.2f, %.2f) brightness(%.2f)\n", i, mass_i,
         //     particles_next[i].pos_x, particles_next[i].pos_y, particles_next[i].vel_x, particles_next[i].vel_y, particles_next[i].brightness);
     }
-    free(f_x_ij);
-    free(f_y_ij);
-    f_x_ij = NULL;
-    f_y_ij = NULL;
 }
 
 void write_history(FILE* fp, int N, Particle* particles)
