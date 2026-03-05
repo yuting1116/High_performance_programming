@@ -368,17 +368,6 @@ int main(int argc, char *argv[]) {
     }
     else
     {
-        // int start_idx = 0;
-        // int end_idx = 0;
-        // for(int i = 0; i < n_thread; i++){
-        //     compute_thread_range(N, n_thread, i, &start_idx, &end_idx);
-        //     threadData[i].start = start_idx;
-        //     threadData[i].end = end_idx;
-        //     start_idx = end_idx;
-
-        //     pthread_create(&threads[i], NULL, simulation, &threadData[i]);
-
-        // }
         launch_thread(threads, threadData, N, n_thread);
 
         for (int i = 0; i < n_thread; i++)
