@@ -1,0 +1,100 @@
+--------------------------------------------------------------------------------
+-- Metadata
+--------------------------------------------------------------------------------
+Invocation:       /usr/bin/cg_annotate cachegrind.out.1809732
+Command:          ./test
+Events recorded:  Ir
+Events shown:     Ir
+Event sort order: Ir
+Threshold:        0.1%
+Annotation:       on
+
+--------------------------------------------------------------------------------
+-- Summary
+--------------------------------------------------------------------------------
+Ir__________________ 
+
+304,573,344 (100.0%)  PROGRAM TOTALS
+
+--------------------------------------------------------------------------------
+-- File:function summary
+--------------------------------------------------------------------------------
+  Ir________________________  file:function
+
+< 275,328,545 (90.4%, 90.4%)  ???:
+  275,065,140 (90.3%)           main
+
+<  26,931,927  (8.8%, 99.2%)  ./malloc/./malloc/malloc.c:
+    8,320,038  (2.7%)           _int_malloc
+    4,866,405  (1.6%)           _int_free_merge_chunk
+    2,969,658  (1.0%)           _int_free
+    2,763,355  (0.9%)           malloc
+    2,288,076  (0.8%)           _int_free_maybe_consolidate
+    2,017,980  (0.7%)           systrim.constprop.0
+    1,842,204  (0.6%)           free
+    1,578,483  (0.5%)           unlink_chunk.isra.0
+
+<   1,260,091  (0.4%, 99.7%)  ./misc/./misc/sbrk.c:sbrk
+
+<     547,372  (0.2%, 99.8%)  ./malloc/./malloc/morecore.c:__glibc_morecore
+
+--------------------------------------------------------------------------------
+-- Function:file summary
+--------------------------------------------------------------------------------
+  Ir________________________  function:file
+
+> 275,065,140 (90.3%, 90.3%)  main:???
+
+>   8,320,038  (2.7%, 93.0%)  _int_malloc:./malloc/./malloc/malloc.c
+
+>   4,866,405  (1.6%, 94.6%)  _int_free_merge_chunk:./malloc/./malloc/malloc.c
+
+>   2,969,658  (1.0%, 95.6%)  _int_free:./malloc/./malloc/malloc.c
+
+>   2,894,944  (1.0%, 96.6%)  malloc:
+    2,763,355  (0.9%)           ./malloc/./malloc/malloc.c
+
+>   2,288,076  (0.8%, 97.3%)  _int_free_maybe_consolidate:./malloc/./malloc/malloc.c
+
+>   2,039,583  (0.7%, 98.0%)  free:
+    1,842,204  (0.6%)           ./malloc/./malloc/malloc.c
+
+>   2,017,980  (0.7%, 98.7%)  systrim.constprop.0:./malloc/./malloc/malloc.c
+
+>   1,578,483  (0.5%, 99.2%)  unlink_chunk.isra.0:./malloc/./malloc/malloc.c
+
+>   1,260,107  (0.4%, 99.6%)  sbrk:
+    1,260,091  (0.4%)           ./misc/./misc/sbrk.c
+
+>     547,372  (0.2%, 99.8%)  __glibc_morecore:./malloc/./malloc/morecore.c
+
+--------------------------------------------------------------------------------
+-- Annotated source file: ./malloc/./malloc/malloc.c
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- ./malloc/./malloc/malloc.c
+
+--------------------------------------------------------------------------------
+-- Annotated source file: ./malloc/./malloc/morecore.c
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- ./malloc/./malloc/morecore.c
+
+--------------------------------------------------------------------------------
+-- Annotated source file: ./misc/./misc/sbrk.c
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- ./misc/./misc/sbrk.c
+
+--------------------------------------------------------------------------------
+-- Annotation summary
+--------------------------------------------------------------------------------
+Ir_________________ 
+
+          0            annotated: files known & above threshold & readable, line numbers known
+          0            annotated: files known & above threshold & readable, line numbers unknown
+          0          unannotated: files known & above threshold & two or more non-identical
+ 28,739,390  (9.4%)  unannotated: files known & above threshold & unreadable 
+    505,409  (0.2%)  unannotated: files known & below threshold
+275,328,545 (90.4%)  unannotated: files unknown
+

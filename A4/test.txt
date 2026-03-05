@@ -1,0 +1,143 @@
+--------------------------------------------------------------------------------
+-- Metadata
+--------------------------------------------------------------------------------
+Invocation:       /usr/bin/cg_annotate --show=D1mr cachegrind.out.1814220
+I1 cache:         32768 B, 64 B, 4-way associative
+D1 cache:         32768 B, 64 B, 8-way associative
+LL cache:         8388608 B, 64 B, 16-way associative
+Command:          ./test
+Events recorded:  Ir I1mr ILmr Dr D1mr DLmr Dw D1mw DLmw
+Events shown:     D1mr
+Event sort order: Ir I1mr ILmr Dr D1mr DLmr Dw D1mw DLmw
+Threshold:        0.1%
+Annotation:       on
+
+--------------------------------------------------------------------------------
+-- Summary
+--------------------------------------------------------------------------------
+D1mr_______________ 
+
+32,720,705 (100.0%)  PROGRAM TOTALS
+
+--------------------------------------------------------------------------------
+-- File:function summary
+--------------------------------------------------------------------------------
+  D1mr______________________  file:function
+
+< 32,651,871 (99.8%,  99.8%)  /home/yuhu4933/A4/test.c:main
+
+<     66,899  (0.2%, 100.0%)  ./malloc/./malloc/malloc.c:
+         484  (0.0%)            _int_malloc
+      65,795  (0.2%)            _int_free_merge_chunk
+         249  (0.0%)            _int_free
+           7  (0.0%)            malloc
+           1  (0.0%)            _int_free_maybe_consolidate
+           2  (0.0%)            systrim.constprop.0
+         124  (0.0%)            free
+         237  (0.0%)            unlink_chunk.isra.0
+
+--------------------------------------------------------------------------------
+-- Function:file summary
+--------------------------------------------------------------------------------
+  D1mr______________________  function:file
+
+> 32,651,871 (99.8%,  99.8%)  main:/home/yuhu4933/A4/test.c
+
+>        484  (0.0%,  99.8%)  _int_malloc:./malloc/./malloc/malloc.c
+
+>     65,795  (0.2%, 100.0%)  _int_free_merge_chunk:./malloc/./malloc/malloc.c
+
+>        249  (0.0%, 100.0%)  _int_free:./malloc/./malloc/malloc.c
+
+>          7  (0.0%, 100.0%)  malloc:
+           7  (0.0%)            ./malloc/./malloc/malloc.c
+
+>          1  (0.0%, 100.0%)  _int_free_maybe_consolidate:./malloc/./malloc/malloc.c
+
+>        124  (0.0%, 100.0%)  free:
+         124  (0.0%)            ./malloc/./malloc/malloc.c
+
+>          2  (0.0%, 100.0%)  systrim.constprop.0:./malloc/./malloc/malloc.c
+
+>        237  (0.0%, 100.0%)  unlink_chunk.isra.0:./malloc/./malloc/malloc.c
+
+--------------------------------------------------------------------------------
+-- Annotated source file: ./malloc/./malloc/malloc.c
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- ./malloc/./malloc/malloc.c
+
+--------------------------------------------------------------------------------
+-- Annotated source file: /home/yuhu4933/A4/test.c
+--------------------------------------------------------------------------------
+D1mr______________ 
+
+         .          #include <stdio.h>
+         .          #include <stdlib.h>
+         .          
+         .          #define N 256  // 可根據需要調整大小，太大 Cachegrind 會跑很久
+         .          
+         0          int main() {
+         .              int i, j, k;
+         0              double sum_ijk = 0.0, sum_ikj = 0.0, sum_kji = 0.0;
+         .          
+         .              // 建立 3D 陣列
+         0              double ***A = (double ***)malloc(N * sizeof(double **));
+         0              for (i = 0; i < N; i++) {
+         0                  A[i] = (double **)malloc(N * sizeof(double *));
+         0                  for (j = 0; j < N; j++) {
+         0                      A[i][j] = (double *)malloc(N * sizeof(double));
+         .                  }
+         .              }
+         .          
+         .              // 初始化
+         0              for (i = 0; i < N; i++)
+         0                  for (j = 0; j < N; j++)
+         0                      for (k = 0; k < N; k++)
+     8,289  (0.0%)                  A[i][j][k] = i + j + k;
+         .          
+         .              // ===== 巢狀迴圈 ijk =====
+         0              for (i = 0; i < N; i++)
+         0                  for (j = 0; j < N; j++)
+         0                      for (k = 0; k < N; k++)
+ 2,121,953  (6.5%)                  sum_ijk += A[i][j][k];
+         .          
+         .              // ===== 巢狀迴圈 ikj =====
+         0              for (i = 0; i < N; i++)
+         0                  for (k = 0; k < N; k++)
+         0                      for (j = 0; j < N; j++)
+ 2,154,625  (6.6%)                  sum_ikj += A[i][j][k];
+         .          
+         .              // ===== 巢狀迴圈 kji =====
+         0              for (k = 0; k < N; k++)
+         0                  for (j = 0; j < N; j++)
+         0                      for (i = 0; i < N; i++)
+28,358,971 (86.7%)                  sum_kji += A[i][j][k];
+         .          
+         0              printf("sum_ijk = %f\n", sum_ijk);
+         0              printf("sum_ikj = %f\n", sum_ikj);
+         0              printf("sum_kji = %f\n", sum_kji);
+         .          
+         .              // 釋放記憶體
+         0              for (i = 0; i < N; i++) {
+         0                  for (j = 0; j < N; j++)
+     8,033  (0.0%)              free(A[i][j]);
+         0                  free(A[i]);
+         .              }
+         0              free(A);
+         .          
+         0              return 0;
+         0          
+
+--------------------------------------------------------------------------------
+-- Annotation summary
+--------------------------------------------------------------------------------
+D1mr______________ 
+
+32,651,871 (99.8%)    annotated: files known & above threshold & readable, line numbers known
+         0            annotated: files known & above threshold & readable, line numbers unknown
+         0          unannotated: files known & above threshold & two or more non-identical
+    66,899  (0.2%)  unannotated: files known & above threshold & unreadable 
+     1,925  (0.0%)  unannotated: files known & below threshold
+        10  (0.0%)  unannotated: files unknown
+

@@ -1,0 +1,243 @@
+--------------------------------------------------------------------------------
+-- Metadata
+--------------------------------------------------------------------------------
+Invocation:       /usr/bin/cg_annotate --show=D1mr cachegrind.out.1822390
+I1 cache:         32768 B, 64 B, 4-way associative
+D1 cache:         32768 B, 64 B, 8-way associative
+LL cache:         8388608 B, 64 B, 16-way associative
+Command:          ./galsim_temp 1000 ../input_data/ellipse_N_01000.gal 200 0.00001 0
+Events recorded:  Ir I1mr ILmr Dr D1mr DLmr Dw D1mw DLmw
+Events shown:     D1mr
+Event sort order: Ir I1mr ILmr Dr D1mr DLmr Dw D1mw DLmw
+Threshold:        0.1%
+Annotation:       on
+
+--------------------------------------------------------------------------------
+-- Summary
+--------------------------------------------------------------------------------
+D1mr_______________ 
+
+70,981,285 (100.0%)  PROGRAM TOTALS
+
+--------------------------------------------------------------------------------
+-- File:function summary
+--------------------------------------------------------------------------------
+  D1mr_____________________  file:function
+
+< 70,819,004 (99.8%, 99.8%)  /home/yuhu4933/A4/graphics/./galsim_temp.c:
+  70,818,601 (99.8%)           update_particles
+
+<          0  (0.0%, 99.8%)  ./math/./math/w_sqrt_compat.c:sqrt
+
+<          0  (0.0%, 99.8%)  ./math/../sysdeps/ieee754/dbl-64/e_sqrt.c:__sqrt_finite@GLIBC_2.15
+
+<        860  (0.0%, 99.8%)  ???:
+         852  (0.0%)           ???
+
+--------------------------------------------------------------------------------
+-- Function:file summary
+--------------------------------------------------------------------------------
+  D1mr_____________________  function:file
+
+> 70,818,601 (99.8%, 99.8%)  update_particles:/home/yuhu4933/A4/graphics/./galsim_temp.c
+
+>          0  (0.0%, 99.8%)  sqrt:./math/./math/w_sqrt_compat.c
+
+>          0  (0.0%, 99.8%)  __sqrt_finite@GLIBC_2.15:./math/../sysdeps/ieee754/dbl-64/e_sqrt.c
+
+>        852  (0.0%, 99.8%)  ???:
+         852  (0.0%)           ???
+
+--------------------------------------------------------------------------------
+-- Annotated source file: ./math/../sysdeps/ieee754/dbl-64/e_sqrt.c
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- ./math/../sysdeps/ieee754/dbl-64/e_sqrt.c
+
+--------------------------------------------------------------------------------
+-- Annotated source file: ./math/./math/w_sqrt_compat.c
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- ./math/./math/w_sqrt_compat.c
+
+--------------------------------------------------------------------------------
+-- Annotated source file: /home/yuhu4933/A4/graphics/./galsim_temp.c
+--------------------------------------------------------------------------------
+D1mr______________ 
+
+-- line 23 ----------------------------------------
+         .              double pos_y;
+         .              double mass;
+         .              double vel_x;
+         .              double vel_y;
+         .              double brightness;
+         .          } Particle;
+         .          
+         .          Particle* read_configuration(char* fileName, int N)
+         0          {
+         .              FILE *fp;
+         0              fp = fopen(fileName, "r");
+         .          
+         0              if (fp == NULL) {
+         .                  printf("open file error\n");
+         .                  return NULL;
+         .              }
+         .          
+         0              Particle* particles = (Particle*)malloc(N * sizeof(Particle));
+         .          
+         0              for (int i = 0; i < N; i++)
+         .              {   
+         0                  if (fread(&particles[i], sizeof(Particle), 1, fp) != 1)
+         .                  {
+         .                      printf("fread failed at particle %d\n", i);
+         .                      exit(EXIT_FAILURE);
+         .                  }
+         .                  // printf("Read file: Particel%d: mass(%.2f) pos(%.2f, %.2f) vel(%.2f, %.2f) brightness(%.2f)\n", i, particles[i].mass,
+         .                  //     particles[i].pos_x, particles[i].pos_y, particles[i].vel_x, particles[i].vel_y, particles[i].brightness);
+         .              }
+         .          
+         0              fclose(fp);
+         0              return particles;
+         0          }
+         .          
+         .          void update_particles(int N, Particle*  particles, Particle*  particles_next, double delta_t)
+         0          {
+       200  (0.0%)      double G = 100.0f/N;
+         0              double epsilon = 1e-3;
+         0              double* f_x_ij = (double*)calloc(N, sizeof(double));
+         0              double* f_y_ij = (double*)calloc(N, sizeof(double));
+         0              for (int i = 0; i < N; i++)
+         .              {        
+         .                  //Copy particle[i] to local variables avoiding reading memory each time
+    99,201  (0.1%)          double pos_x_i = particles[i].pos_x; 
+         0                  double pos_y_i = particles[i].pos_y;
+    25,200  (0.0%)          double vel_x_i = particles[i].vel_x;
+    24,600  (0.0%)          double vel_y_i = particles[i].vel_y;
+         0                  double mass_i = particles[i].mass;
+         .          
+         .                  // j starts from i+1 to calculate each particle pair only once
+         0                  for (int j = i+1; j < N; j++)
+         .                  {
+53,100,400 (74.8%)              double mass_j = particles[j].mass;
+         0                      double pos_x_j = particles[j].pos_x;
+         0                      double pos_y_j = particles[j].pos_y;
+         .              
+         0                      double r_x = pos_x_i - pos_x_j;
+         0                      double r_y = pos_y_i - pos_y_j;
+         0                      double r_ij_mag = sqrt(r_x*r_x + r_y*r_y);
+         0                      double div = 1/((r_ij_mag + epsilon)*(r_ij_mag + epsilon)*(r_ij_mag + epsilon));
+         .                      // Update forces symmetrically for both particles: F_ij = -F_ji
+    12,200  (0.0%)              f_x_ij[i] += mass_j * div * r_x;
+    12,400  (0.0%)              f_y_ij[i] += mass_j * div * r_y;
+ 8,787,200 (12.4%)              f_x_ij[j] += - mass_i * div * r_x;
+ 8,757,200 (12.3%)              f_y_ij[j] += - mass_i * div * r_y;
+         .                  }
+         .          
+         0                  double F_x = -G * mass_i * f_x_ij[i];
+         0                  double F_y = -G * mass_i * f_y_ij[i];
+         0                  double mass_i_div = 1.0f / mass_i;
+         0                  double vel_x_next = vel_x_i + delta_t * F_x * mass_i_div;
+         0                  double vel_y_next = vel_y_i + delta_t * F_y * mass_i_div;
+         0                  double pos_x_next = pos_x_i + delta_t * vel_x_next;
+         0                  double pos_y_next = pos_y_i + delta_t * vel_y_next;
+         .          
+         .                  // update
+         0                  particles_next[i].pos_x = pos_x_next;
+         0                  particles_next[i].pos_y = pos_y_next;
+         0                  particles_next[i].vel_x = vel_x_next;
+         0                  particles_next[i].vel_y = vel_y_next;
+         .                  // printf("Particel%d: mass(%.2f) pos(%.2f, %.2f) vel(%.2f, %.2f) brightness(%.2f)\n", i, mass_i,
+         .                  //     particles_next[i].pos_x, particles_next[i].pos_y, particles_next[i].vel_x, particles_next[i].vel_y, particles_next[i].brightness);
+         .              }
+         .          
+         0              free(f_x_ij);
+         0              free(f_y_ij);
+         0              f_x_ij = NULL;
+         0              f_y_ij = NULL;
+         0          }
+         .          
+         .          void write_history(FILE* fp, int N, Particle* particles)
+         0          {
+         0              for (int i = 0; i < N; i++)
+         .              {
+         0                  fwrite(&particles[i].pos_x, sizeof(double), 1, fp);
+         0                  fwrite(&particles[i].pos_y, sizeof(double), 1, fp);
+         0                  fwrite(&particles[i].mass, sizeof(double), 1, fp);
+         0                  fwrite(&particles[i].vel_x, sizeof(double), 1, fp);
+         0                  fwrite(&particles[i].vel_y, sizeof(double), 1, fp);
+         0                  fwrite(&particles[i].brightness, sizeof(double), 1, fp);
+         .              }
+         0          }
+         .          
+         0          int main(int argc, char *argv[]) {
+         .              
+         0              if (argc <= 5)
+         .              {
+         .                  printf("Not enough input!\n");
+         .                  return 0;
+         .              }
+         .          
+         0              int N  = atoi(argv[1]);
+         0              char* filename = argv[2];
+         1  (0.0%)      int nsteps = atoi(argv[3]);
+         0              double delta_t = strtod(argv[4], NULL);
+         0              bool en_graphics = (strcmp(argv[5], "1") == 0);
+         0              printf("N:%d, filename:%s nstep:%d delta_t:%.2f, graphic:%d\n", N, filename, nsteps, delta_t, en_graphics);
+         .          
+         0              FILE *fp = fopen("result.gal", "wb");
+         .          
+         0              Particle* particles = read_configuration(filename, N);
+         0              Particle* particles_next = (Particle*)malloc(N * sizeof(Particle));
+         0              memcpy(particles_next, particles, N * sizeof(Particle));
+         .          
+         0              if (en_graphics)
+         .              {
+         .                  float L=1, W=1;
+         .                  InitializeGraphics(argv[0], windowWidth, windowWidth/2);
+         .                  SetCAxes(0,1);
+         .          
+         .                  for (int step = 0; step < nsteps; step++)
+         .                  {
+         .                      ClearScreen();
+-- line 155 ----------------------------------------
+-- line 164 ----------------------------------------
+         .                      Refresh();
+         .                      usleep(10000);
+         .                  }
+         .                  FlushDisplay();
+         .                  CloseDisplay();
+         .              }
+         .              else
+         .              {
+       200  (0.0%)          for (int step = 0; step < nsteps; step++)
+         .                  {
+         0                      update_particles(N, particles, particles_next, delta_t);
+       200  (0.0%)              memcpy(particles, particles_next, N * sizeof(Particle));
+         .                  }
+         .              }
+         .              
+         0              write_history(fp, N, particles);
+         .              
+         .              // To do
+         .              // free struct Particle
+         1  (0.0%)      free(particles);
+         0              free(particles_next);
+         .          
+         0              particles = NULL;
+         0              particles_next = NULL;
+         0              return 0;
+         .          
+         1  (0.0%)  
+
+--------------------------------------------------------------------------------
+-- Annotation summary
+--------------------------------------------------------------------------------
+D1mr______________ 
+
+70,819,004 (99.8%)    annotated: files known & above threshold & readable, line numbers known
+         0            annotated: files known & above threshold & readable, line numbers unknown
+         0          unannotated: files known & above threshold & two or more non-identical
+         0          unannotated: files known & above threshold & unreadable 
+   161,421  (0.2%)  unannotated: files known & below threshold
+       860  (0.0%)  unannotated: files unknown
+
